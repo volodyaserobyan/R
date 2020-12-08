@@ -1,0 +1,389 @@
+---
+title: "Homework Assignment 1"
+author: "Volodya Serobyan"
+output: 
+  html_document:
+    toc: true
+    toc_float: true
+    theme: united
+    highlight: tango
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+***
+# Requirements
+
+**File format:** *For this Homework, you are required to submit both R Markdown and HTML files with your answers and codes in it. Make sure that Rmd file works so that there won’t be any errors when it is run and represent the same information as HTML. Under each question write the code along with your interpretations (not in comments). Be sure to put your name at the top of your assignment (in the YAML header in front of the author).*
+
+**Due date:** *06.10.19 23:55. No late homework will be accepted.*
+
+**Submission:** *You need to upload/create files in **private** [GitHub repository](https://help.github.com/en/articles/create-a-repo) and [share](https://help.github.com/en/articles/inviting-collaborators-to-a-personal-repository) with [me](https://github.com/Zilfimian). Then, submit the link of your repository in the file uploaded on Google Drive (Submetted HW).*
+
+**Suggestion:** *Start with creating a framework for your R Markdown file, rewrite the tasks and only then start to solve the tasks.*
+
+**Rule of thumb:** *If the number of data points is greater than 100, use subsets, do not print the whole data. Try to show all outputs (do not just store the object as a variable). Also, please, avoid using the same name for variables in the file.*
+
+**Cheating:** *The purpose of tasks is to check your knowledge (rather than the ability of thinking). Please, try to solve without googling every exercise. Try not to discuss with your classmates and work only on your file. Any similarities, which can be considered as cheated, will not be graded.*
+
+***
+
+***
+
+# Task 1 (2 points): Accuracy
+
+<style>
+div.red { background-color:#F2D7D5; padding: 20px;}
+</style>
+
+<style>
+div.green { background-color:#90EE90; padding: 20px;}
+</style>
+
+<div class = "red">
+**Replicate all the details from the Homework assignment (HTML). It can be slightly different from the HW Assignment style e.g. other color/theme, but it cannot be the same as default options. Pay attention to:**
+
+a. Table of content, its structure, and design.
+
+b. Task highlights and order.
+
+c. Breaks, line breaks and letters modes (bold, italicized, etc.).
+
+d. Links and pictures^[Pay attention to this reference, too :). You can find the picture uploaded on Google Drive].
+
+e. Formulas, signs and inline codes.
+
+f. etc :)
+
+</div>
+
+***
+***
+
+# Task 2 (1 point): Arithmetics & Vectors
+<div class = "red">
+a. Calcualte
+$$\log_{2}{\frac{\cos(\left\lvert\frac{-3\pi}{2}\right\rvert) + e}{\sqrt{a}} * 27^{8},}$$
+when a=25. Note: There should NOT be any scientific notations. Check in R that the result is less than 0?
+
+b.Consider the following inequality:
+$$(1+α)n≥1+nα;∀α>−1,n∈N$$
+Show that the inequality is true for 3 different values of α and n=3.
+
+c.  Create the following vectors in R:
+* $x={(27.8,27.6,27.4,...,8.8)}$
+* $y=(27,27,8,8,−95,−95,27,27,8,8,−95,...,−95)$
+
+
+Extract/show the first 5 elements of vectors. Note: The number of element of x should twice greater to whose of y. Use more approptiate function to create the vectors.
+
+d. Add (avelacnel (to the end)) the median of the vector x to the vector y. Use vector arithmetic to multiply these vectors and store the result in z. Is there a warning? Why?
+e. Extract the 27th, 77th, 95th, and the last elements of z? Overwrite these elements with the two recycled values 0 and 1, in this order. Is there a warning? Why?
+f. Print all of the elements of z which are less than or equal to −1000. How many elements are satisfying this condition? Find their indecies.
+</div>
+
+## Solution 2^[For illustration]
+
+<div class = "green">
+
+a.
+```{r}
+log(base=2, x=(cos(abs((-3*pi)/2)) + exp(1) / sqrt(25))) * 27^8
+```
+
+b.
+```{r}
+alp <- 3
+(1 + alp)^3 >= 1 + 3*alp
+
+alp <- 5
+(1 + alp)^3 >= 1 + 3*alp
+
+alp <- 4
+(1 + alp)^3 >= 1 + 3*alp
+```
+
+c.
+```{r}
+x <- seq(from=27.8, to=8.8, by=-0.2)
+y <- rep(c(27, 8, -95), times=2 * length(x) / 6, each=2)
+
+head(x, 5)
+head(y, 5)
+```
+
+d.
+```{r}
+y <- c(y, median(x))
+z <- x * y
+```
+We get warning here because the length of y is not multiple to the lenght of x.
+
+When the length are not equal R tries to repeat the short vector length(y) / length(x) times, and then multiply the result with the long vector.
+
+e.
+```{r}
+z[27]
+z[77]
+z[95]
+z[length(z)]
+z[c(27, 77, 95, length(z))] <- rep(c(0, 1), 2)
+```
+There is no warning message because the length of `rep(c(0, 1), 2)` is equal to the count of element we want to override.
+
+f.
+```{r}
+new_z <- z[z <= -1000]
+new_z
+length(new_z)
+```
+</div>
+
+***
+
+***
+
+# Task 3 (1 point): Matricies
+<div class = "red">
+Use R to create the following two matrices and do the matrix multiplication. Use the optional argument byrow to fill the first matrix in the column-wise fashion and the second one in the row-wise fashion.
+
+$$\frac{1}{4}\left(\begin{array}
+{rrr}
+1 & 1 & 0 \\
+2 & 3 & 1 \\
+2 & 3 & 2
+\end {array}
+\right)
+\left(\begin{array}
+{rrr}
+1 & 0 \\
+2 & 1 \\
+1 & 0
+\end {array}
+\right)$$ 
+
+a. What is the resulting matrix and its dimension? Show that multiplication is not commutative.
+
+b. Extract a sub-matrix from the resulting matrix and save in `subC`. It should be a 2x2 matrix which includes the last two rows and corresponding columns. Find its transpose.
+
+c. Check whether R is stored `subC` as a matrix and whether its value is numeric.
+
+d. Make the diagonal elements of the matrix `subC` 0.
+
+e. Verify that $subC^{−1}subC=subCsubC^{−1}=I_2$, using the relational operators. How is the comparison done?
+
+</div>
+
+## Solution 3
+
+<div class = "green">
+
+a.
+```{r}
+A <- matrix(c(1, 2, 2, 1, 3, 3, 0, 1, 2), nrow = 3, ncol = 3)
+B <- matrix(c(1, 0, 2, 1, 1, 0), nrow = 3, ncol = 2, byrow = TRUE)
+
+arr1 <- A%*%B / 4
+arr1
+dim(arr1)
+
+```
+
+b.
+```{r}
+subArr <- arr1[2:3, ]
+subArr
+TsubArr <- t(subArr)
+TsubArr
+```
+
+c.
+```{r}
+typeof(subArr)
+is.numeric(subArr)
+```
+
+d.
+```{r}
+diag(subArr) <- 0
+subArr
+```
+</div>
+
+e.
+```{r}
+r1 <- subArr%*%solve(subArr)
+r2 <- solve(subArr)%*%subArr
+r <- r1 == r2
+r <- r2 == diag(2)
+all(r)
+```
+== operator for matricies compares matricies elementwise and returns a new matrix of boolean values.
+If the result matrix has no FALSE element them matricies are equal
+
+***
+
+***
+
+# Task 4 (2 points): Lists, Array & Data Frame
+<div class = "red">
+a. Create a list containing
+* Vectors: the first two vectors of the second problem.
+* Matrix: sub-matrix of problem 3.
+* Three-dimensional array of 1x29 matrices obtaining from the concatenation of two vectors of problem 2. How many layers are required to fill the array completely?
+
+b. Subtract from each element of the first vector **from the list** the average value of the second vector. Use the different methods for accessing the objects.
+
+c. Remove the second vector and subC from the list by one-line code. How many components does the new list have? Give the names to the elements of the list.
+
+d. Create and store this data frame as `dframe`:
+
+**Name**            |**Gender** | **Rating**
+------------------- | --------  | ------------
+Eric Clapton	      |   M	      |  High
+Jimi Hendrix	      |  	M	      |  Med
+Joe Satriani	      |   M	      |  Love
+Steven Vai	        |   M	      |  High
+Orianthi Panagaris	|   F       |	 Low
+Lita Ford	          |   F	      |  Low
+Zakk Wylde	        |   M	      |  Med
+Emily Remler	      |   F	      |  Low
+
+**Note** Pay attention to the types of the variables:
+
+```{r}
+## 'data.frame':    8 obs. of  3 variables:
+##  $ Name  : chr  "Eric Clapton" "Jimi Hendrix" "Joe Satriani" "Steven Vai" ...
+##  $ Gender: Factor w/ 2 levels "M","F": 1 1 1 1 2 2 1 2
+##  $ Rating: Ord.factor w/ 4 levels "Low"<"Med"<"High"<..: 3 2 4 3 1 1 2 2
+```
+
+Add to the data new variable Year with the birth year of corresponding person $1945;1942;1956;1960;1985;1958;1967;1957$. Check the structure of the data.
+
+e. Calculate the age of guitarist apart from Jimi Hendrix (for subsetting use the relational operators). Store the result in a vector. Use the vector to append this information as a new variable in dframe called Age. The age of Jimi Hendrix should be missed.
+
+f. Create a new observation with your favorite guitarist and combine this observation with the data.
+
+g. Add the data frame as a new component 'DF' to the list. Extract the first 5 observations of the last component in the list.
+</div>
+
+## Solution 4
+
+<div class = "green">
+
+a.
+```{r}
+l <- list(x, y, subArr, array(c(x, y), dim = c(1, 29, 10)))
+```
+
+b.
+```{r}
+l[[1]] <- l[[1]] - mean(l[[2]])
+```
+
+c.
+```{r}
+l <- l[-c(2, 3)]
+length(l)
+names(l) <- c("x", "matrics")
+```
+
+d.
+```{r}
+df <- data.frame(Name=c("Eric Clapton", "Jimi Hendrix", "Joe Satriani", "Steven Vai", "Orianthi Panagaris", "Lita Ford", "Zakk Wylde", "Emily Remler"),
+                 Year=c(1945, 1942, 1956, 1960, 1985, 1958, 1967, 1957),
+                 Gender=factor(c("M", "M", "M", "M", "F", "F", "M", "F"), 
+                               levels = c("M", "F")),
+                 Rating=ordered(c("High", "Med", "Love", "High", "Low", "Low", "Med", "Med"), levels = c("Low", "Med", "High", "Love")), 
+                 stringsAsFactors = FALSE)
+df
+```
+
+e.
+
+```{r}
+Age <- 2020 - df$Year
+Age[2] <- 0
+
+df <- cbind(df, Age)
+df
+```
+
+f.
+```{r}
+guitarist <- c("Volodya Serobyan", 1997, "M", "High", 23)
+df <- rbind(df, guitarist)
+df
+```
+g.
+```{r}
+##head(l[[2]], 5)
+l$DF <- df
+l$DF[l$DF$Gender == "M", ]
+```
+</div>
+
+***
+
+***
+## Solution 5
+
+
+```{r}
+library(knitr)
+library(kableExtra)
+knitr::kable(df) %>%
+  kable_styling("striped", full_width = F) %>%
+  row_spec(5:6, bold = T, color = "red", background = "#F2D7D5") %>%
+  row_spec(8, bold = T, color = "red", background = "#F2D7D5") %>%
+  row_spec(0, angle = 10)
+
+```
+
+
+***
+
+***
+
+# Task 6 (1 point): Questions
+<div class = "red">
+a. How many assigning operators does R have? What is/are the difference/s among/between them? Bring the R code examples.
+b. Why do we need a data frame if we already have a matrix?
+c. How many outputs can R diag() function have? What does it depend on?
+d. What is the difference between `echo = T` and `echo = F`. Specify other useful R chunks/global options.
+e. What does `[1]` in the output mean?
+f. Compare the following object types: data frame, lists, and array.
+g. How much time did it take you to accomplish the HW?
+</div>
+
+## Solution 6
+
+<div class = "green">
+
+a.
+R has 2 assignment operators: `<-` and `=`. The difference is that `<-` could not be used to specify argument during funtion calls. Say if we have `a <- function(x, y){}` the the call `f(y<-12)` passes the value `12` to the `x` argument, not `y`.
+
+b.
+Data frame stores elemnts of different types. In matrixes we can store element of the same type only.
+
+c.
+`diag()` returns a diagonal matrix of corresponding size or, if we assign smth it replaces the diagonal of a matrics, e.g it returns diagonal of input matrics in that case.
+
+d.
+`echo = FALSE` prevents code to be visible in final document.
+`warning = FALSE` makes warnings be non visible.
+
+e.
+`[1]` means that the following element is the first element in the output
+
+f.
+arrays are multidimentional (>=3) matricses.
+Lists are matrixes, whose rows/columns can have different types, also the rows/columns can have different lengths.
+Data frames are usefull to store and work with data. Like lists, they are allowing to store data of different types, but the rows/columns must have the same length.
+
+g.
+4 hours
+</div>
+***
